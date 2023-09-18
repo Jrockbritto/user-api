@@ -28,4 +28,12 @@ export class UserRepository implements IUserRepository {
   findByEmail(email: string): Promise<User | null> {
     return this.repository.findOne({ where: { email } });
   }
+
+  async disable(id: string): Promise<User | undefined> {
+    const user = await this.repository.findOne({ where: { id } });
+    if (user) {
+      Object.assign(user, { deletedAt: new Date() });
+      return await this.repository.save(user);
+    }
+  }
 }

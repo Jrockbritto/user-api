@@ -22,20 +22,35 @@ export class InMemoryUserRepository implements IUserRepository {
 
   async save(data: IUpdateUserDTO): Promise<User> {
     const { id, username, email, fullName } = data;
-    const user = new User();
 
-    Object.assign(user, { id, username, email, fullName });
-    const index = this.users.findIndex((item) => item.id === user.id);
-    this.users[index] = user;
+    const index = this.users.findIndex((item) => item.id === id);
 
-    return user;
+    Object.assign(this.users[index], { id, username, email, fullName });
+
+    return this.users[index];
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.users.find((user) => user.id === id) || null;
+    const user = this.users.find((user) => user.id === id);
+
+    if (!user?.deletedAt || user) {
+      return user ?? null;
+    }
+    return null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.users.find((user) => user.email === email) || null;
+  }
+
+  async disable(id: string): Promise<User | undefined> {
+    const index = this.users.findIndex((item) => item.id === id);
+    const user = this.users[index];
+
+    if (user) {
+      Object.assign(user, { deletedAt: new Date() });
+      return user;
+    }
+    return undefined;
   }
 }
