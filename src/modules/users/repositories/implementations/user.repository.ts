@@ -17,6 +17,10 @@ export class UserRepository implements IUserRepository {
     return this.repository.save(user);
   }
 
+  save(data: ICreateUserDTO): Promise<User> {
+    return this.repository.save(data);
+  }
+
   findById(id: string): Promise<User | null> {
     return this.repository.findOne({ where: { id } });
   }

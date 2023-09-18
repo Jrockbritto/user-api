@@ -4,13 +4,13 @@ import { IsString, Matches } from 'class-validator';
 import { Match } from '@shared/decorators/matches.decorator';
 
 export class CreateUserDTO {
-  @ApiProperty({ type: String, example: 'lorem' })
+  @ApiProperty({ type: String, example: 'loremipsum' })
   @IsString()
-  name: string;
+  username: string;
 
-  @ApiProperty({ type: String, example: 'ipsum' })
+  @ApiProperty({ type: String, example: 'Lorem Ipsum' })
   @IsString()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty({ type: String, example: 'loremipsum@gmail.com' })
   @IsString()

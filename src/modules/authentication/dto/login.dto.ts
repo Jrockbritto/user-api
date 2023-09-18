@@ -19,8 +19,8 @@ export class LoginResponseDTO {
     type: User,
     example: {
       id: '8a580c52-e012-45a7-965a-0c8bf6a85ced',
-      name: 'John',
-      lastName: 'Doe',
+      username: 'johndoe',
+      fullName: 'John Doe',
       email: 'johndoe@gmail.com',
       createdAt: '2023-04-26T20:43:51.671Z',
       updatedAt: '2023-04-26T20:43:51.671Z',

@@ -8,5 +8,5 @@ export class GetUserDTO {
   })
   @IsString()
   @IsUUID()
-  id: string;
+  userId: string;
 }

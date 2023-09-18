@@ -23,15 +23,22 @@ export class User {
     example: 'John',
   })
   @IsString()
-  @Column({ name: 'name' })
-  name: string;
+  @Column({ name: 'username' })
+  username: string;
 
   @ApiProperty({
     example: 'Doe',
   })
   @IsString()
-  @Column({ name: 'last_name' })
-  lastName: string;
+  @Column({ name: 'full_name' })
+  fullName: string;
+
+  @ApiProperty({
+    example: 'John doe was a very nice person.',
+  })
+  @IsString()
+  @Column({ name: 'biography' })
+  biography: string;
 
   @ApiProperty({
     example: 'email@email.com',

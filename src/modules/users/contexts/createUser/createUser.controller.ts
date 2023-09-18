@@ -20,12 +20,13 @@ export class CreateUserController {
   @ApiCreatedResponse({ type: CreateUserResponseDTO })
   @UseGuards(JwtAuthGuard)
   async handler(
-    @Body() { email, lastName, name, password, confirmPassword }: CreateUserDTO,
+    @Body()
+    { email, fullName, username, password, confirmPassword }: CreateUserDTO,
   ) {
     const user = await this.createUserService.execute({
       email,
-      lastName,
-      name,
+      fullName,
+      username,
       password,
       confirmPassword,
     });

@@ -20,8 +20,8 @@ export class CreateUserService {
   ) {}
   async execute({
     email,
-    lastName,
-    name,
+    fullName,
+    username,
     password,
   }: CreateUserDTO): Promise<User> {
     const emailValidation = await this.userRepository.findByEmail(email);
@@ -32,8 +32,8 @@ export class CreateUserService {
 
     return this.userRepository.create({
       email,
-      lastName,
-      name,
+      fullName,
+      username,
       password: await this.encryptProvider.generateHash(password),
     });
   }

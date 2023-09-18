@@ -8,8 +8,8 @@ export class CreateUserResponseDTO {
   @ApiProperty({
     type: User,
     example: {
-      name: 'Lorem',
-      lastName: 'Ipsom',
+      username: 'loremipsom',
+      fullName: 'Lorem Ipsom',
       email: 'loremipsom@gmail.com',
       deletedAt: null,
       id: '530b4225-e2e5-41e7-ba0f-c7c6d42e5540',

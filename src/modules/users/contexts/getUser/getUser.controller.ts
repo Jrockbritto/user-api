@@ -1,5 +1,5 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common/decorators';
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
 import { USERS } from '@config/constants/tags.constants';
@@ -16,11 +16,11 @@ import { GetUserService } from './getUser.service';
 export class GetUserController {
   constructor(private readonly getUserService: GetUserService) {}
   @Get(':userId')
-  @ApiCreatedResponse({ type: User })
+  @ApiOkResponse({ type: User })
   @UseGuards(JwtAuthGuard)
-  async handler(@Param() { id }: GetUserDTO) {
+  async handler(@Param() { userId }: GetUserDTO) {
     const user = await this.getUserService.execute({
-      id,
+      userId,
     });
     return { user: plainToInstance(User, user) };
   }
