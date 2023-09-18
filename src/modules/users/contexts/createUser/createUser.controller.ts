@@ -19,11 +19,19 @@ export class CreateUserController {
   @ApiCreatedResponse({ type: CreateUserResponseDTO })
   async handler(
     @Body()
-    { email, fullName, username, password, confirmPassword }: CreateUserDTO,
+    {
+      email,
+      fullName,
+      biography,
+      username,
+      password,
+      confirmPassword,
+    }: CreateUserDTO,
   ) {
     const user = await this.createUserService.execute({
       email,
       fullName,
+      biography,
       username,
       password,
       confirmPassword,

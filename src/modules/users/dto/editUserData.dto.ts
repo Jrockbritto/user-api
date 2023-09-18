@@ -13,4 +13,10 @@ export class EditUserDataDTO {
   @IsNotEmpty()
   @IsOptional()
   fullName: string;
+
+  @ApiProperty({ type: String, example: 'John doe was a very nice person.' })
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  biography: string;
 }
