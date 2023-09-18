@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: vila_app
+    build:
+      context: .
+      target: node
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/node/app
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    env_file: .env
+    networks:
+      - app-network
+
+  database:
+    image: postgres
+    container_name: vila_database
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - pgdata:/data/postgres
+    networks:
+      - app-network
+
+  documents:
+    image: mongo:latest
+    container_name: vila_documents
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+    driver: local
+  mongodb_data_container:
+    driver: local
+networks:
+  app-network:
+    driver: bridge

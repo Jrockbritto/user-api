@@ -1,0 +1,1 @@
+export const ENCRYPT_PROVIDER = 'ENCRYPT_PROVIDER';
