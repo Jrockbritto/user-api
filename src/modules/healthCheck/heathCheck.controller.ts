@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 
 import { HEALTH_CHECK } from '@config/constants/tags.constants';

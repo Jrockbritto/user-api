@@ -1,4 +1,4 @@
-import { Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
@@ -15,7 +15,7 @@ import { GetUserService } from './getUser.service';
 @ApiTags(USERS)
 export class GetUserController {
   constructor(private readonly getUserService: GetUserService) {}
-  @Post(':userId')
+  @Get(':userId')
   @ApiCreatedResponse({ type: User })
   @UseGuards(JwtAuthGuard)
   async handler(@Param() { id }: GetUserDTO) {
