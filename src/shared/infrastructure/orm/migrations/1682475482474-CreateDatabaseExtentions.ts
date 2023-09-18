@@ -8,6 +8,6 @@ export class CreateDatabaseExtentions1682475482474
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP EXTENSION IF NOT EXISTS "uuid-ossp"');
+    await queryRunner.query('DROP EXTENSION IF EXISTS "uuid-ossp"');
   }
 }
