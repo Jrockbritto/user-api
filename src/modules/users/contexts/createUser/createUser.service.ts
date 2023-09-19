@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { ConflictException } from '@nestjs/common/exceptions';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
 import { USER_REPOSITORY } from '@config/constants/repositories.constants';
@@ -17,6 +18,8 @@ export class CreateUserService {
     private readonly userRepository: IUserRepository,
     @Inject(ENCRYPT_PROVIDER)
     private readonly encryptProvider: IEncryptProvider,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
   async execute({
     email,
@@ -24,19 +27,26 @@ export class CreateUserService {
     biography,
     username,
     password,
-  }: CreateUserDTO): Promise<User> {
-    const emailValidation = await this.userRepository.findByEmail(email);
+  }: CreateUserDTO): Promise<User | void> {
+    try {
+      const emailValidation = await this.userRepository.findByEmail(email);
 
-    if (emailValidation) {
-      throw new ConflictException('email-already-in-use');
+      if (emailValidation) {
+        throw new ConflictException('email-already-in-use');
+      }
+
+      const user = await this.userRepository.create({
+        email,
+        fullName,
+        biography,
+        username,
+        password: await this.encryptProvider.generateHash(password),
+      });
+
+      this.logger.error(`User ${user.id} created`, CreateUserService.name);
+      return user;
+    } catch (err) {
+      this.logger.error(`Error creating user`, CreateUserService.name);
     }
-
-    return this.userRepository.create({
-      email,
-      fullName,
-      biography,
-      username,
-      password: await this.encryptProvider.generateHash(password),
-    });
   }
 }

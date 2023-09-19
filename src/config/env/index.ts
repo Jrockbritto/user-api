@@ -3,6 +3,7 @@ export default () => {
     appPort: Number(process.env.APP_PORT),
     domain: process.env.DOMAIN,
     urlConnection: String(process.env.URL_CONNETION),
+    mongoLogDB: String(process.env.MONGO_LOG_DB),
     jwt: {
       expiresIn: process.env.JWT_EXPIRES_IN,
       token: process.env.JWT_TOKEN,
