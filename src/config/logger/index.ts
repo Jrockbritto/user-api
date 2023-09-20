@@ -24,6 +24,13 @@ export const MongoLogger = async (configService: ConfigService) => {
     format.metadata(),
   );
 
+  const dbConnection =
+    String(configService.get('NODE_ENV')) === 'production'
+      ? String(configService.get('URL_CONNECTION')) +
+        collection +
+        '?authSource=admin'
+      : String(configService.get('URL_CONNECTION')) + collection;
+
   return {
     transports: [
       new transports.Console({ format: consoleFormat }),
@@ -32,7 +39,7 @@ export const MongoLogger = async (configService: ConfigService) => {
         options: {
           useUnifiedTopology: true,
         },
-        db: String(configService.get('URL_CONNECTION')) + collection,
+        db: dbConnection,
         collection,
         format: mongoFormat,
       }),

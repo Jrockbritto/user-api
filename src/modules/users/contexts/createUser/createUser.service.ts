@@ -28,25 +28,21 @@ export class CreateUserService {
     username,
     password,
   }: CreateUserDTO): Promise<User | void> {
-    try {
-      const emailValidation = await this.userRepository.findByEmail(email);
+    const emailValidation = await this.userRepository.findByEmail(email);
 
-      if (emailValidation) {
-        throw new ConflictException('email-already-in-use');
-      }
-
-      const user = await this.userRepository.create({
-        email,
-        fullName,
-        biography,
-        username,
-        password: await this.encryptProvider.generateHash(password),
-      });
-
-      this.logger.error(`User ${user.id} created`, CreateUserService.name);
-      return user;
-    } catch (err) {
-      this.logger.error(`Error creating user`, CreateUserService.name);
+    if (emailValidation) {
+      throw new ConflictException('email-already-in-use');
     }
+
+    const user = await this.userRepository.create({
+      email,
+      fullName,
+      biography,
+      username,
+      password: await this.encryptProvider.generateHash(password),
+    });
+
+    this.logger.error(`User ${user.id} created`, CreateUserService.name);
+    return user;
   }
 }
