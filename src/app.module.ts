@@ -20,7 +20,10 @@ import { UserModule } from '@modules/users/user.module';
       inject: [ConfigService],
     }),
     TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
-    MongooseModule.forRoot(String(process.env.URL_CONNECTION)),
+    MongooseModule.forRoot(
+      String(process.env.URL_CONNECTION) +
+        '?authSource=admin&directConnection=true',
+    ),
     AuthenticationModule,
     HealthCheckModule,
     UserModule,
