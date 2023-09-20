@@ -25,11 +25,7 @@ export const MongoLogger = async (configService: ConfigService) => {
   );
 
   const dbConnection =
-    String(configService.get('NODE_ENV')) === 'production'
-      ? String(configService.get('URL_CONNECTION')) +
-        collection +
-        '?authSource=admin'
-      : String(configService.get('URL_CONNECTION')) + collection;
+    String(configService.get('URL_CONNECTION')) + '?authSource=admin';
 
   return {
     transports: [

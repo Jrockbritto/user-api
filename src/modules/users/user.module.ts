@@ -1,11 +1,20 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
-import { USER_REPOSITORY } from '@config/constants/repositories.constants';
+import {
+  TOKEN_REPOSITORY,
+  USER_REPOSITORY,
+} from '@config/constants/repositories.constants';
 
 import { BcryptProvider } from '@shared/providers/EncryptProvider/implementations/bcrypt.provider';
 
+import { TokenRepository } from '@modules/authentication/repositories/implementations/token.repository';
+import {
+  Token,
+  TokenSchema,
+} from '@modules/authentication/schemas/token.schema';
 import { User } from '@modules/users/entity/User.entity';
 
 import { CreateUserController } from './contexts/createUser/createUser.controller';
@@ -18,7 +27,10 @@ import { GetUserController } from './contexts/getUser/getUser.controller';
 import { GetUserService } from './contexts/getUser/getUser.service';
 import { UserRepository } from './repositories/implementations/user.repository';
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+  ],
   providers: [
     CreateUserService,
     GetUserService,
@@ -26,6 +38,7 @@ import { UserRepository } from './repositories/implementations/user.repository';
     DisableUserService,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: ENCRYPT_PROVIDER, useClass: BcryptProvider },
+    { provide: TOKEN_REPOSITORY, useClass: TokenRepository },
   ],
   controllers: [
     CreateUserController,
