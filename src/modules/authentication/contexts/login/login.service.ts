@@ -77,7 +77,7 @@ export class LoginService {
 
     if (!JwtConfig.token) {
       this.logger.error(
-        `No token for the JWT was provided.`,
+        `No secretOrPrivateKey for the JWT was provided.`,
         LoginService.name,
       );
       throw new InternalServerErrorException();
