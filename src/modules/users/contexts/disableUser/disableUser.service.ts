@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
+import { LoggerService } from '@nestjs/common/services';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import {
   REFRESH_TOKEN_REPOSITORY,
@@ -22,6 +24,8 @@ export class DisableUserService {
     private tokenRepository: ITokenRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
   async execute({ userId }: DisableUserDTO): Promise<User | void> {
     const user = await this.userRepository.disable(userId);
@@ -32,6 +36,8 @@ export class DisableUserService {
 
     await this.tokenRepository.destroy(userId);
     await this.refreshTokenRepository.destroy(userId);
+
+    this.logger.log(`User ${user.id} disabled`, DisableUserService.name);
 
     return user;
   }

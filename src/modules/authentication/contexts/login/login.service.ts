@@ -5,7 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common/exceptions';
+import { LoggerService } from '@nestjs/common/services';
 import { sign } from 'jsonwebtoken';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
 import {
@@ -36,6 +38,8 @@ export class LoginService {
     private refreshTokenRepository: IRefreshTokenRepository,
     @Inject(ENCRYPT_PROVIDER)
     private encryptProvider: IEncryptProvider,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({
@@ -45,12 +49,14 @@ export class LoginService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
+      this.logger.error(`No user found at Login`, LoginService.name);
       throw new UnauthorizedException('invalid-credentials');
     }
 
     const activeToken = await this.tokenRepository.findByUserId(user.id);
 
     if (activeToken) {
+      this.logger.warn(`User ${user.id} already logged in`, LoginService.name);
       throw new ConflictException('user-already-logged');
     }
 
@@ -60,12 +66,20 @@ export class LoginService {
     );
 
     if (!passwordMatched) {
+      this.logger.warn(
+        `User ${user.id} provided invalid credentials`,
+        LoginService.name,
+      );
       throw new UnauthorizedException('invalid-credentials');
     }
 
     const JwtConfig = env().jwt;
 
     if (!JwtConfig.token) {
+      this.logger.error(
+        `No token for the JWT was provided.`,
+        LoginService.name,
+      );
       throw new InternalServerErrorException();
     }
 
@@ -84,6 +98,11 @@ export class LoginService {
       userId: user.id,
       token: refreshToken,
     });
+
+    this.logger.log(
+      `User ${user.id} successifully logged in`,
+      LoginService.name,
+    );
 
     return { user, token, refreshToken };
   }

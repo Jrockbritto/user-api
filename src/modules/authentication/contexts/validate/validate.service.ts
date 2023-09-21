@@ -3,7 +3,9 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
+import { LoggerService } from '@nestjs/common/services';
 import { verify, sign } from 'jsonwebtoken';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import {
   REFRESH_TOKEN_REPOSITORY,
@@ -25,6 +27,8 @@ export class ValidateService {
     private tokenRepository: ITokenRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({
@@ -35,6 +39,10 @@ export class ValidateService {
       const JwtConfig = env().jwt;
 
       if (!JwtConfig.token) {
+        this.logger.error(
+          `No secretOrPrivateKey for the JWT was provided.`,
+          ValidateService.name,
+        );
         throw new InternalServerErrorException();
       }
       try {
@@ -58,6 +66,11 @@ export class ValidateService {
         userId: user.id,
         token: newRefreshToken,
       });
+
+      this.logger.log(
+        `User ${user.id} was successifully issued with a new token and refresh token.`,
+        ValidateService.name,
+      );
 
       return { user, token, refreshToken: newRefreshToken };
     }

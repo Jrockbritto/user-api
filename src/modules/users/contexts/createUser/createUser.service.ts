@@ -42,7 +42,7 @@ export class CreateUserService {
       password: await this.encryptProvider.generateHash(password),
     });
 
-    this.logger.error(`User ${user.id} created`, CreateUserService.name);
+    this.logger.log(`User ${user.id} created`, CreateUserService.name);
     return user;
   }
 }

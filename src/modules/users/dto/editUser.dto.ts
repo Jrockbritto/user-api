@@ -32,5 +32,6 @@ export class EditUserBodyDTO {
 
 export class EditUserDTO {
   userId: string;
+  editorId: string;
   data: EditUserDataDTO;
 }

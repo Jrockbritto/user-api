@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { LoggerService } from '@nestjs/common/services';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import {
   REFRESH_TOKEN_REPOSITORY,
@@ -16,10 +18,17 @@ export class LogoutService {
     private tokenRepository: ITokenRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({ userId }: LogoutRequestDTO): Promise<void> {
     await this.tokenRepository.destroy(userId);
     await this.refreshTokenRepository.destroy(userId);
+
+    this.logger.log(
+      `User ${userId} successifully logged out`,
+      LogoutService.name,
+    );
   }
 }

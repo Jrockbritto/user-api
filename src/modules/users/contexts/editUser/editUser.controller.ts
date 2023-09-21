@@ -4,9 +4,11 @@ import {
   UseGuards,
   Param,
   Patch,
+  Req,
 } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { Request } from 'express';
 
 import { USERS } from '@config/constants/tags.constants';
 
@@ -30,8 +32,13 @@ export class EditUserController {
   async handler(
     @Param() { userId }: EditUserParamsDTO,
     @Body() { data }: EditUserBodyDTO,
+    @Req() { user }: Request,
   ): Promise<{ user: User }> {
-    const user = await this.editUserService.execute({ userId, data });
-    return { user: plainToInstance(User, user) };
+    const editedUser = await this.editUserService.execute({
+      userId,
+      data,
+      editorId: (user as User).id,
+    });
+    return { user: plainToInstance(User, editedUser) };
   }
 }
