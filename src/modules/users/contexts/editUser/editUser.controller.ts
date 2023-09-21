@@ -30,7 +30,7 @@ export class EditUserController {
   async handler(
     @Param() { userId }: EditUserParamsDTO,
     @Body() { data }: EditUserBodyDTO,
-  ) {
+  ): Promise<{ user: User }> {
     const user = await this.editUserService.execute({ userId, data });
     return { user: plainToInstance(User, user) };
   }

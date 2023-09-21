@@ -1,4 +1,11 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common/decorators';
+import {
+  Controller,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common/decorators';
+import { HttpStatus } from '@nestjs/common/enums';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -15,6 +22,7 @@ import { LogoutService } from './logout.service';
 export class LogoutController {
   constructor(private readonly logoutService: LogoutService) {}
   @Post('/logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
   async handler(@Req() request: Request): Promise<void> {
     await this.logoutService.execute({ userId: (request.user as User).id });

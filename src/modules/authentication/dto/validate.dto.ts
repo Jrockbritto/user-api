@@ -1,20 +1,29 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 import { User } from '@modules/users/entity/User.entity';
 
-export class LoginRequestDTO {
-  @ApiProperty({ type: String, example: 'johndoe@gmail.com' })
+export class ValidateRequestDTO {
+  @ApiPropertyOptional({
+    type: String,
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+  })
   @IsString()
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({ type: String, example: 'Teste1234@' })
-  @IsString()
-  password: string;
+  @IsOptional()
+  refreshToken?: string;
 }
 
-export class LoginResponseDTO {
+export class ValidateDTO extends ValidateRequestDTO {
+  @ApiProperty({
+    type: String,
+    example: '8a580c52-e012-45a7-965a-0c8bf6a85ced',
+  })
+  @IsString()
+  user: User;
+}
+
+export class ValidateResponseDTO {
   @ApiProperty({
     type: User,
     example: {

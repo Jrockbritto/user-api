@@ -19,7 +19,7 @@ export class DisableUserController {
   @Delete(':userId')
   @ApiOkResponse({ type: User })
   @UseGuards(JwtAuthGuard)
-  async handler(@Param() { userId }: DisableUserDTO) {
+  async handler(@Param() { userId }: DisableUserDTO): Promise<{ user: User }> {
     const user = await this.disableUserService.execute({
       userId,
     });

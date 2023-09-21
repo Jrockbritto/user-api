@@ -18,7 +18,7 @@ export class GetUserController {
   @Get(':userId')
   @ApiOkResponse({ type: User })
   @UseGuards(JwtAuthGuard)
-  async handler(@Param() { userId }: GetUserDTO) {
+  async handler(@Param() { userId }: GetUserDTO): Promise<{ user: User }> {
     const user = await this.getUserService.execute({
       userId,
     });

@@ -27,7 +27,7 @@ export class CreateUserController {
       password,
       confirmPassword,
     }: CreateUserDTO,
-  ) {
+  ): Promise<{ user: User }> {
     const user = await this.createUserService.execute({
       email,
       fullName,

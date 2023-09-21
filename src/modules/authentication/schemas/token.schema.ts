@@ -10,7 +10,7 @@ export class Token {
   @Prop()
   userId: string;
 
-  @Prop({ expires: 10 })
+  @Prop()
   token: string;
 
   @Prop({ type: Date, expires: env().jwt.expiresIn, default: Date.now })

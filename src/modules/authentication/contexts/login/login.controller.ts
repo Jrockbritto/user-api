@@ -18,11 +18,12 @@ export class LoginController {
   constructor(private readonly loginService: LoginService) {}
   @ApiCreatedResponse({ type: LoginResponseDTO })
   @Post('/login')
-  async handler(@Body() dto: LoginRequestDTO) {
-    const { user, token } = await this.loginService.execute(dto);
+  async handler(@Body() dto: LoginRequestDTO): Promise<LoginResponseDTO> {
+    const { user, token, refreshToken } = await this.loginService.execute(dto);
     return {
       user: plainToInstance(User, user),
       token,
+      refreshToken,
     };
   }
 }

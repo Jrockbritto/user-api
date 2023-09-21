@@ -4,13 +4,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
 import {
+  REFRESH_TOKEN_REPOSITORY,
   TOKEN_REPOSITORY,
   USER_REPOSITORY,
 } from '@config/constants/repositories.constants';
 
 import { BcryptProvider } from '@shared/providers/EncryptProvider/implementations/bcrypt.provider';
 
+import { RefreshTokenRepository } from '@modules/authentication/repositories/implementations/refreshToken.repository';
 import { TokenRepository } from '@modules/authentication/repositories/implementations/token.repository';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from '@modules/authentication/schemas/refreshToken.schema';
 import {
   Token,
   TokenSchema,
@@ -29,7 +35,10 @@ import { UserRepository } from './repositories/implementations/user.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    MongooseModule.forFeature([{ name: Token.name, schema: TokenSchema }]),
+    MongooseModule.forFeature([
+      { name: Token.name, schema: TokenSchema },
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
   ],
   providers: [
     CreateUserService,
@@ -39,6 +48,7 @@ import { UserRepository } from './repositories/implementations/user.repository';
     { provide: USER_REPOSITORY, useClass: UserRepository },
     { provide: ENCRYPT_PROVIDER, useClass: BcryptProvider },
     { provide: TOKEN_REPOSITORY, useClass: TokenRepository },
+    { provide: REFRESH_TOKEN_REPOSITORY, useClass: RefreshTokenRepository },
   ],
   controllers: [
     CreateUserController,

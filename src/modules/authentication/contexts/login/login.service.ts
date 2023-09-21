@@ -1,14 +1,15 @@
 import {
   ConflictException,
-  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common/exceptions';
 import { sign } from 'jsonwebtoken';
 
 import { ENCRYPT_PROVIDER } from '@config/constants/providers.constants';
 import {
+  REFRESH_TOKEN_REPOSITORY,
   TOKEN_REPOSITORY,
   USER_REPOSITORY,
 } from '@config/constants/repositories.constants';
@@ -20,6 +21,7 @@ import {
   LoginRequestDTO,
   LoginResponseDTO,
 } from '@modules/authentication/dto/login.dto';
+import { IRefreshTokenRepository } from '@modules/authentication/repositories/refreshToken.interface';
 import { ITokenRepository } from '@modules/authentication/repositories/token.interface';
 import { IUserRepository } from '@modules/users/repositories/userRepository.interface';
 
@@ -30,6 +32,8 @@ export class LoginService {
     private userRepository: IUserRepository,
     @Inject(TOKEN_REPOSITORY)
     private tokenRepository: ITokenRepository,
+    @Inject(REFRESH_TOKEN_REPOSITORY)
+    private refreshTokenRepository: IRefreshTokenRepository,
     @Inject(ENCRYPT_PROVIDER)
     private encryptProvider: IEncryptProvider,
   ) {}
@@ -62,7 +66,7 @@ export class LoginService {
     const JwtConfig = env().jwt;
 
     if (!JwtConfig.token) {
-      throw new ForbiddenException();
+      throw new InternalServerErrorException();
     }
 
     const token = sign({}, JwtConfig.token, {
@@ -70,8 +74,17 @@ export class LoginService {
       expiresIn: JwtConfig.expiresIn,
     });
 
-    await this.tokenRepository.save({ userId: user.id, token });
+    const refreshToken = sign({}, JwtConfig.token, {
+      subject: user.id,
+      expiresIn: JwtConfig.refreshExpiresIn,
+    });
 
-    return { user, token };
+    await this.tokenRepository.save({ userId: user.id, token });
+    await this.refreshTokenRepository.save({
+      userId: user.id,
+      token: refreshToken,
+    });
+
+    return { user, token, refreshToken };
   }
 }

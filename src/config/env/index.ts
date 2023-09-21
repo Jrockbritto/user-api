@@ -7,6 +7,7 @@ export default () => {
     jwt: {
       expiresIn: process.env.JWT_EXPIRES_IN,
       token: process.env.JWT_TOKEN,
+      refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
     },
     database: {
       host: process.env.DB_HOST,
