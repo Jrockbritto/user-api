@@ -22,14 +22,35 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## User Api
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+User api made with .
 
 ## Installation
-
+#### install packages
 ```bash
 $ npm install
+
+```
+#### generate build version
+```bash
+$ npm run build
+
+```
+
+#### **make sure to add and configure a .env file**
+
+## Running the dependencies
+```bash
+# docker
+$ docker compose up -d documents database
+```
+
+## Setting up the app
+
+```bash
+$ npm run migration:run
+
 ```
 
 ## Running the app
@@ -43,19 +64,6 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Support
